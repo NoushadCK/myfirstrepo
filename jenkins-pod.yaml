@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mypod
-  namespace: Jenkins
+  name: Jenkins-slave-pod
+  namespace: jenkins
   labels:
     name: Jenkins-slave
 spec:
