@@ -6,13 +6,13 @@ pipeline {
   }
   environment {
     PROJECT = "jenkins-demo"
-    REGISTRY_USER = "vfarcic"
+    REGISTRY_USER = "noushadck"
   }
   stages {
     stage("Build") {
       steps {
-        container("shell") {
-   //       sh "/kaniko/executor --context `pwd` --destination vfarcic/jenkins-demo:latest --destination ${REGISTRY_USER}/${PROJECT}:${env.BRANCH_NAME.toLowerCase()}-${BUILD_NUMBER}"
+        container("kaniko") {
+          sh "/kaniko/executor --context `pwd` --destination noushadck/jenkins-demo:latest --destination ${REGISTRY_USER}/${PROJECT}:${env.BRANCH_NAME.toLowerCase()}-${BUILD_NUMBER}"
             sh "echo Build Done "
         }
       }
