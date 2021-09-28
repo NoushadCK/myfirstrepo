@@ -11,8 +11,9 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-        container("kaniko") {
-          sh "/kaniko/executor --context `pwd` --destination vfarcic/jenkins-demo:latest --destination ${REGISTRY_USER}/${PROJECT}:${env.BRANCH_NAME.toLowerCase()}-${BUILD_NUMBER}"
+        container("shell") {
+   //       sh "/kaniko/executor --context `pwd` --destination vfarcic/jenkins-demo:latest --destination ${REGISTRY_USER}/${PROJECT}:${env.BRANCH_NAME.toLowerCase()}-${BUILD_NUMBER}"
+            sh "echo Build Done "
         }
       }
     }
@@ -22,17 +23,8 @@ pipeline {
         container("kustomize") {
           sh """
             set +e
-            kubectl create namespace $PROJECT-${env.BRANCH_NAME.toLowerCase()}
-            set -e
-            cd kustomize/overlays/preview
-            kustomize edit set namespace $PROJECT-${env.BRANCH_NAME.toLowerCase()}
-            kustomize edit set image $REGISTRY_USER/$PROJECT=$REGISTRY_USER/$PROJECT:${env.BRANCH_NAME.toLowerCase()}-$BUILD_NUMBER
-            cat ingress.yaml | sed -e "s@host: @host: ${env.BRANCH_NAME.toLowerCase()}@g" | tee ingress.yaml
-            kustomize build . | kubectl apply --filename -
-            kubectl --namespace $PROJECT-${env.BRANCH_NAME.toLowerCase()} rollout status deployment jenkins-demo
+            echo "Hello its Working"
           """
-          sh "curl http://${env.BRANCH_NAME.toLowerCase()}$PROJECT.acme.com"
-          sh "kubectl delete namespace $PROJECT-${env.BRANCH_NAME.toLowerCase()}"
         }
       }
     }
@@ -41,9 +33,7 @@ pipeline {
       steps {
         container("kustomize") {
           sh """
-            cd kustomize/overlays/production
-            kustomize edit set image ${REGISTRY_USER}/${PROJECT}=${REGISTRY_USER}/${PROJECT}:$BRANCH_NAME-${BUILD_NUMBER}
-            kustomize build . | kubectl apply --filename -
+            echo "We are inside Kustomize"
           """
         }
       }
