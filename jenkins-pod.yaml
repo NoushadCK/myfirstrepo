@@ -18,16 +18,20 @@ spec:
     command:
     - cat
     tty: true
-#     volumeMounts:
-#     - name: kaniko-secret
-#       mountPath: /kaniko/.docker/
+     volumeMounts:
+     - name: docker-config
+       mountPath: /kaniko/.docker/
   - name: kustomize
     image: nekottyo/kustomize-kubeval
     command:
     - cat
     tty: true
-#   volumes:
-#   - name: kaniko-secret
+  volumes:
+    - name: docker-config
+      configMap:
+        name: docker-config
+#  volumes:
+#  - name: kaniko-secret
 #     secret:
 #       secretName: regcred
 #       items:
